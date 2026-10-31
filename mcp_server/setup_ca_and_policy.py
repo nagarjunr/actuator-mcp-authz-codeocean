@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ca.ca import generate_root_ca, issue_agent_certificate, ensure_private_dir, save_root_ca, write_private_file
+from ca.ca import generate_root_ca, issue_agent_certificate, ensure_private_dir, save_root_ca, write_private_file, write_public_file
 from policy_engine.policy_signing import sign_policy_file
 
 RUNTIME_DIR = Path(__file__).resolve().parent.parent / "runtime"
@@ -85,7 +85,7 @@ def main() -> None:
         cert = issue_agent_certificate(ca, agent_id=agent_id, role=role)
         cert_path = CERTS_DIR / f"{agent_id}.cert.pem"
         key_path = CERTS_DIR / f"{agent_id}.key.pem"
-        cert_path.write_bytes(cert.cert_pem)
+        write_public_file(cert_path, cert.cert_pem)
         write_private_file(key_path, cert.private_key_pem)
         cert_b64_path = CERTS_DIR / f"{agent_id}.cert.b64"
         # The base64 certificate is what an agent presents as its identity, so keep it owner-only too.
