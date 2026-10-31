@@ -3,6 +3,7 @@
 Physical-actuation extension of `mcp-local-authz`'s control-plane-optional
 MCP authorization architecture, plus a new non-learned physical
 safety-envelope middleware. Implementation of a non-learned safety envelope for industrial relay and digital I/O control.
+Code Ocean: Extending Offline MCP Authorization to Physical Actuation: A Non-Learned Safety Envelope for Industrial Relay and Digital I/O Control
 
 ## What this is
 
