@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ca.ca import generate_root_ca, issue_agent_certificate, save_root_ca, write_private_file
+from ca.ca import generate_root_ca, issue_agent_certificate, ensure_private_dir, save_root_ca, write_private_file
 from policy_engine.policy_signing import sign_policy_file
 
 RUNTIME_DIR = Path(__file__).resolve().parent.parent / "runtime"
@@ -67,7 +67,7 @@ default_effect: DENY
 
 def main() -> None:
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
-    CERTS_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
+    ensure_private_dir(CERTS_DIR)
 
     ca = generate_root_ca(site_id="adam6060-rig")
     save_root_ca(ca, CA_DIR)
