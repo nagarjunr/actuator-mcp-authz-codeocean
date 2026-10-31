@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ca.ca import generate_root_ca, issue_agent_certificate, save_root_ca
+from ca.ca import generate_root_ca, issue_agent_certificate, save_root_ca, write_private_file
 from policy_engine.policy_signing import sign_policy_file
 
 RUNTIME_DIR = Path(__file__).resolve().parent.parent / "runtime"
@@ -67,7 +67,7 @@ default_effect: DENY
 
 def main() -> None:
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
-    CERTS_DIR.mkdir(parents=True, exist_ok=True)
+    CERTS_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
 
     ca = generate_root_ca(site_id="adam6060-rig")
     save_root_ca(ca, CA_DIR)
@@ -86,9 +86,10 @@ def main() -> None:
         cert_path = CERTS_DIR / f"{agent_id}.cert.pem"
         key_path = CERTS_DIR / f"{agent_id}.key.pem"
         cert_path.write_bytes(cert.cert_pem)
-        key_path.write_bytes(cert.private_key_pem)
+        write_private_file(key_path, cert.private_key_pem)
         cert_b64_path = CERTS_DIR / f"{agent_id}.cert.b64"
-        cert_b64_path.write_text(base64.b64encode(cert.cert_pem).decode())
+        # The base64 certificate is what an agent presents as its identity, so keep it owner-only too.
+        write_private_file(cert_b64_path, base64.b64encode(cert.cert_pem))
         print(f"Issued cert for {agent_id} (role={role}) -> {cert_path}")
 
 
