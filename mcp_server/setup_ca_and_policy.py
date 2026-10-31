@@ -66,7 +66,7 @@ default_effect: DENY
 
 
 def main() -> None:
-    RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_private_dir(RUNTIME_DIR)
     ensure_private_dir(CERTS_DIR)
 
     ca = generate_root_ca(site_id="adam6060-rig")
