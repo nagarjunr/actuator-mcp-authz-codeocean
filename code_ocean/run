@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Code Ocean run script for actuator-mcp-authz.
+#
+# Runs ONLY the static verification described in code_ocean/README.md (the
+# zero-source-change retrofit property + clean-import check under the pinned
+# dependency set). This capsule does NOT re-run the 13-scenario
+# hardware evaluation battery, which requires a live ADAM-6060 on a reachable
+# Modbus TCP network and, for one scenario, a human physically pressing a
+# wired pushbutton -- see code_ocean/README.md for the full explanation and
+# results/evaluation_results.md for that evidence as actually recorded on
+# real hardware.
+
+set -euo pipefail
+
+if [ -f "/code/pyproject.toml" ]; then
+  REPO_DIR="/code"
+elif [ -f "/code/actuator-mcp-authz/pyproject.toml" ]; then
+  REPO_DIR="/code/actuator-mcp-authz"
+else
+  REPO_DIR="$(dirname "$(find /code -maxdepth 3 -name pyproject.toml -print -quit)")"
+fi
+
+cd "$REPO_DIR"
+
+uv sync --frozen --no-cache
+uv run python -m code_ocean.verify_static_properties

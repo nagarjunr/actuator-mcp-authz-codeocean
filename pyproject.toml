@@ -1,0 +1,21 @@
+[project]
+name = "actuator-mcp-authz"
+version = "0.1.0"
+description = "Extending control-plane-optional MCP authorization to physical actuation: a non-learned safety envelope for industrial relay/digital-I/O control (Advantech ADAM-6060)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Nagarjun Rajendran" }]
+dependencies = [
+    "pyyaml>=6.0",
+    "cryptography>=43.0",
+    "fastmcp==3.4.7",
+    "pymodbus>=3.15.0",
+    "pydantic>=2.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]

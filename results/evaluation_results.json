@@ -1,0 +1,135 @@
+{
+  "scenario_1_confused_deputy": {
+    "passed": true,
+    "detail": {
+      "ok": false,
+      "error": "Tool 'write_relay' denied for role 'read-only-monitor': read-only-monitor has no write access to actuators",
+      "error_type": "ToolError",
+      "latency_s": 0.006785108940675855
+    }
+  },
+  "scenario_2_credential_replay": {
+    "passed": true
+  },
+  "scenario_3_fail_closed_ca_unreachable": {
+    "passed": true
+  },
+  "scenario_4_revocation_window_timing": {
+    "passed": true,
+    "issuance_to_first_use_s": 0.007961566094309092,
+    "cert_validity_window_s": 28800.0,
+    "worst_case_exposure_window_s": 28800.0
+  },
+  "scenario_5_policy_tampering_under_load": {
+    "passed": true
+  },
+  "scenario_6_audit_log_integrity_concurrent": {
+    "passed": true
+  },
+  "scenario_7_zero_source_change_retrofit": {
+    "passed": true
+  },
+  "scenario_8_baseline_unauthorized_rejection": {
+    "passed": true
+  },
+  "scenario_9_rate_limiting": {
+    "passed": true
+  },
+  "scenario_10_interlock": {
+    "passed": true
+  },
+  "scenario_11_di0_stuck_case": {
+    "passed": true
+  },
+  "scenario_11_di0_correct_case": {
+    "passed": true,
+    "pressed_seen_during_window": true,
+    "note": "Re-run 2026-09-13T02:26 UTC with a human physically pressing the DI0 pushbutton during the 8s window (original unattended subagent run could not trigger a physical press). PASS confirmed on real hardware."
+  },
+  "scenario_12_estop_precedence": {
+    "passed": true
+  },
+  "scenario_13_degraded_network_failsafe": {
+    "passed": true,
+    "sub_a_passed": true,
+    "sub_b": {
+      "passed": true,
+      "relay_before_disconnect": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "watchdog_detected_degraded": true,
+      "watchdog_recovered": true,
+      "safety_envelope_events": [
+        {
+          "ts": 1789265966.1127737,
+          "kind": "force_degraded_for_test",
+          "detail": {
+            "degraded": true
+          }
+        },
+        {
+          "ts": 1789265966.1184611,
+          "kind": "fail_safe_all_off_succeeded",
+          "detail": {}
+        },
+        {
+          "ts": 1789265966.4195652,
+          "kind": "force_degraded_for_test",
+          "detail": {
+            "degraded": false
+          }
+        },
+        {
+          "ts": 1789265969.7513103,
+          "kind": "watchdog_degraded",
+          "detail": {
+            "consecutive_misses": 3
+          }
+        },
+        {
+          "ts": 1789265969.753885,
+          "kind": "fail_safe_all_off_failed",
+          "detail": {
+            "error": "Could not connect to ADAM-6060 at 10.0.0.1:502."
+          }
+        },
+        {
+          "ts": 1789265972.7584128,
+          "kind": "fail_safe_all_off_failed",
+          "detail": {
+            "error": "Could not connect to ADAM-6060 at 10.0.0.1:502."
+          }
+        }
+      ],
+      "relay_state_after_recovery": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "gap_fix_rl3_authorized_write": {
+    "passed": true,
+    "note": "RL3 had never received an authorized write_relay call on real hardware before this check (only appeared as a denied-call target in scenario 8). Confirmed: ON then OFF via MCP authz path, both readback-confirmed."
+  },
+  "gap_fix_all_relays_off_authorized": {
+    "passed": true,
+    "note": "all_relays_off MCP tool had only been exercised in the DENY direction (scenario 8); confirmed here as an authorized allow-path call that correctly drives all 6 relays OFF on real hardware."
+  },
+  "gap_fix_invalid_channel_authorized_agent": {
+    "passed": true,
+    "note": "Invalid channel values (9, -1) from an AUTHORIZED agent were cleanly rejected with ValueError, no relay state change, server remained healthy afterward (a subsequent valid RL4 write still succeeded)."
+  },
+  "gap_fix_audit_chain_after_invalid_input": {
+    "passed": true,
+    "note": "Hash chain verified valid (103 entries) after the invalid-channel errors were logged -- confirms error paths do not corrupt the audit trail."
+  }
+}
